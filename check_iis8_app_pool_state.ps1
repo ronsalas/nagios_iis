@@ -38,7 +38,9 @@ $apppools = $servermanager.ApplicationPools["$ApplicationPool"]
 $iis=get-itemproperty HKLM:\SOFTWARE\Microsoft\InetStp\  | select setupstring
 
 # Nagios output
-$resultstring='IISPOOL UNKNOWN ' + $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+$$status_str='IISPOOL UNKNOWN ' + $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' '
+$perf_data= "IISPOOL=" + "0" + ';' + "0" + ';' + "0" + "; "
+$resultstring= "$status_str  |  $perf_data " 
 $exit_code = $UNKNOWN
 
 
@@ -48,12 +50,16 @@ if ($apppools -ne $null)  {
     
   if ($status -eq 'Started')
 	{
-		$resultstring='IISPOOL OK '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+		$status_str='IISPOOL OK '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+		$perf_data= "IISPOOL=" + "1" + ';' + "0" + ';' + "0" + "; "
+		$resultstring= "$status_str  |  $perf_data "
 		$exit_code = $OK
 	}
 	else
 	{
-   $resultstring='IISPOOL CRITICAL '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+   $status_str='IISPOOL CRITICAL '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+   $perf_data= "IISPOOL=" + "0" + ';' + "0" + ';' + "0" + "; "
+   $resultstring= "$status_str  |  $perf_data "
    $exit_code = $CRITICAL
 	}
 }
