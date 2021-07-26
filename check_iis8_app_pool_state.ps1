@@ -38,7 +38,7 @@ $apppools = $servermanager.ApplicationPools["$ApplicationPool"]
 $iis=get-itemproperty HKLM:\SOFTWARE\Microsoft\InetStp\  | select setupstring
 
 # Nagios output
-$$status_str='IISPOOL UNKNOWN ' + $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' '
+$status_str='IISPOOL UNKNOWN ' + $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' '
 $perf_data= "IISPOOL=" + "0" + ';' + "0" + ';' + "0" + "; "
 $resultstring= "$status_str  |  $perf_data " 
 $exit_code = $UNKNOWN
