@@ -39,7 +39,7 @@ $iis=get-itemproperty HKLM:\SOFTWARE\Microsoft\InetStp\  | select setupstring
 
 # Nagios output
 $status_str='IISPOOL UNKNOWN ' + $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' '
-$perf_data= "IISPOOL=" + "0" + ';' + "0" + ';' + "0" + "; "
+$perf_data= "IISPOOL=" + "0" + ';' + ';' + "; "
 $resultstring= "$status_str  |  $perf_data " 
 $exit_code = $UNKNOWN
 
@@ -51,17 +51,17 @@ if ($apppools -ne $null)  {
   if ($status -eq 'Started')
 	{
 		$status_str='IISPOOL OK '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
-		$perf_data= "IISPOOL=" + "1" + ';' + "0" + ';' + "0" + "; "
-		$resultstring= "$status_str  |  $perf_data "
+		$pdata= 1
 		$exit_code = $OK
 	}
 	else
 	{
-   $status_str='IISPOOL CRITICAL '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
-   $perf_data= "IISPOOL=" + "0" + ';' + "0" + ';' + "0" + "; "
-   $resultstring= "$status_str  |  $perf_data "
-   $exit_code = $CRITICAL
+   		$status_str='IISPOOL CRITICAL '+  $ApplicationPool + ' ' + $status +' ; ' + $iis.SETUPSTRING + ' ' 
+   		$pdata= 0
+   		$exit_code = $CRITICAL
 	}
+	$perf_data= "IISPOOL=" + $pdata + ';' + ';' + "; "
+	$resultstring= "$status_str  |  $perf_data "
 }
 
 Write-Host $resultstring
