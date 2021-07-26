@@ -42,7 +42,9 @@ $iis=get-itemproperty HKLM:\SOFTWARE\Microsoft\InetStp\  | select setupstring
 
 # Nagios output
 
-$resultstring="IISSITE UNKNOWN  $website not found"
+$status_str="IISSITE UNKNOWN  $website not found"
+$perf_data= "IISSITE=" + "0" + ';' + ';' + "; "
+$resultstring= "$status_str  |  $perf_data " 
 $exit_code = $UNKNOWN
   
 if ($site -ne $null) {
@@ -50,18 +52,22 @@ if ($site -ne $null) {
   $status= $site.State
   
   if ($status -eq "Started"){
-    $resultstring='IISSITE OK ' + $website + ' ' + $status + '-' + $iis.setupstring
-	$exit_code = $OK
+    $status_str='IISSITE OK ' + $website + ' ' + $status + '-' + $iis.setupstring
+    $pdata= 1
+    $exit_code = $OK
   }
   elseif ($status -eq $null) {
-	$resultstring="IISSITE UNKNOWN  $website exists, but has no state. Check it is not a FTP site."
+	$status_str="IISSITE UNKNOWN  $website exists, but has no state. Check it is not a FTP site."
+	$pdata= 0
   }
   else
   {	
-	$resultstring='IISSITE CRITICAL '+ $website + ' ' + $status + '-' + $iis.setupstring
+	$status_str='IISSITE CRITICAL '+ $website + ' ' + $status + '-' + $iis.setupstring
+	$pdata= 0
 	$exit_code = $CRITICAL
   }
-  
+  $perf_data= "IISSITE=" + $pdata + ';' + ';' + "; "
+  $resultstring= "$status_str  |  $perf_data " 
 }
 
 
