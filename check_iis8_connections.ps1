@@ -45,6 +45,8 @@ $counter = Get-Counter "\\$server\Web Service($website)\Current Connections"
 # Nagios output
 
 $resultstring='CONNECTIONS UNKNOWN ' + $website + ' not found' 
+$perf_data= "connections=" + 0 + ';' + $warning_value + ';' + $critical_value + "; "
+$resultstring= "$status_str  |  $perf_data "
 $exit_code = $UNKNOWN
   
 if ($counter -ne $null) {
